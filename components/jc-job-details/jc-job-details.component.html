@@ -1,0 +1,74 @@
+<div class="jc-job-details-container" *ngIf="jobDetails">
+  <span class="sub-heading" *ngIf="showImgsOnly">Receiving</span>
+  <div *ngIf="!showImgsOnly">
+    <div
+      class="jc-job-store-details"
+      [ngStyle]="{ 'border-left-color': activeStore?.ticketColor }"
+      *ngIf="!hideStoreDetails"
+    >
+      <span
+        class="jc-job-store-details__number"
+        [innerHTML]="storeDetails?.store"
+      ></span>
+      <img class="jc-job-store-details__icon" [src]="brandLogo" />
+    </div>
+    <div class="jc-job-phone-details" *ngIf="!hideStoreDetails">
+      <div class="jc-job-container__label">Phone:</div>
+      <div
+        class="jc-job-container__value"
+        [innerHTML]="storeDetails?.phone | telephone"
+      ></div>
+    </div>
+    <hr class="jc-job-details-container__divider" *ngIf="!hideStoreDetails" />
+    <div class="jc-job-number-details">
+      <div class="jc-job-container__label">Job Number:</div>
+      <div
+        class="jc-job-container__value"
+        [innerHTML]="jobDetails?.divisionJobNumber"
+      ></div>
+    </div>
+    <div class="jc-job-customer-details">
+      <div class="jc-job-container__label">Customer Name:</div>
+      <div
+        class="jc-job-container__value"
+        [innerHTML]="jobDetails?.customer.customerFirstName"
+      ></div>
+    </div>
+    <div class="jc-job-promisedate-details">
+      <div class="jc-job-container__label">Promise Date:</div>
+      <div
+        class="jc-job-container__value"
+        [innerHTML]="jobDetails?.promiseDate | date: 'mediumDate' :'UTC'"
+      ></div>
+    </div>
+    <div class="jc-job-description-details">
+      <div class="jc-job-container__label">Description:</div>
+      <div
+        class="jc-job-container__value"
+        [innerHTML]="jobDetails?.jobComment"
+      ></div>
+    </div>
+  </div>
+  <div
+    class="jc-job-img-container"
+    [class.margin-left-20]="showImgsOnly"
+    *ngFor="let img of getReceivingImages()"
+  >
+    <div class="jc-job-scanned-img-container">
+      <img
+        class="jc-job-scanned-img-container__img"
+        src="{{ getImgUrl(img.id) }}"
+      />
+      <div class="jc-job-scanned-img-container__details">
+        <div
+          class="jc-job-scanned-img-container__date"
+          [innerHTML]="img?.addDate | date"
+        ></div>
+        <div class="jc-job-scanned-img-container__employee">
+          {{ jobDetails?.customer.customerFirstName }}
+        </div>
+        <div class="jc-job-scanned-img-container__shop">Service Center {{ shopNo }}</div>
+      </div>
+    </div>
+  </div>
+</div>

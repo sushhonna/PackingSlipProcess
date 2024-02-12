@@ -1,0 +1,22 @@
+<div class="print-msg-container" *ngIf="jobCompletionMsg">
+  <i class="icon done">
+    E
+  </i>
+  <div class="print-msg">
+    {{ jobCompletionMsg }}
+  </div>
+  <i class="icon close" (click)="jobCompletionMsg='';">
+    G
+  </i>
+</div>
+<div class="lookup">
+  <h1>
+    Job Completion
+  </h1>
+  <p class="lookup__title">{{ displayMessage.JOBCOMPLETION.JOB_COMPLETION_LOOK_UP }}</p>
+  <form [formGroup]="jobNumberForm" (ngSubmit)="submitForm()">
+    <input class="lookup__input" type="text" [ngClass]="{ 'lookup__input--error' : error }" placeholder="Enter or scan job #" formControlName="jobNumber" #searchInput/>
+    <app-error-message class="lookup__error" *ngIf="error" [message]="error" ></app-error-message>
+  </form>
+
+</div>

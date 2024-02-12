@@ -1,0 +1,82 @@
+<div class="main-container">
+  <form [formGroup]="bundleCodesForm">
+    <div class="container-1">
+      <div class="row">
+        <div class="col-md-6">
+          <mat-icon class="dialog-close" (click)="close()">close</mat-icon>
+        </div>
+      </div>
+      <div class="title">
+        Add Job Codes
+      </div> <br><br>
+
+      <div class="form-group">
+        <span class="text-black-50">Bundle</span> <br>
+        <span class="text-black">{{bundleCodesData.type || '-'}}</span>
+        <!-- <select class="form-select rs-pop-control-width100" formControlName="bundleType">
+          <option value="" disabled>Select Bundle Type</option>
+          <option *ngFor="let bundleType of bundleTypeList" [ngValue]="bundleType">
+            {{bundleType}}</option>
+        </select> -->
+      </div> <br>
+
+      <div class="metal-jewelry">
+        <div class="col-md-6 metal form-group">
+          <span class="text-black-50">Metal Type</span> <br>
+          <span class="text-black">{{bundleCodesData.metalType || '-'}}</span>
+          <!-- <select class="form-select metal-select" formControlName="metalType" (ngModelChange)="getBundleCodesList(null)">
+            <option value="">Select Metal Type</option>
+            <option *ngFor="let metalType of metalTypeList" [ngValue]="metalType">
+              {{metalType}}</option>
+          </select> -->
+        </div>
+        <div class="col-md-6 jewelry form-group">
+          <span class="text-black-50">Jewelry Type</span> <br>
+          <span class="text-black">{{bundleCodesData.jewelryType || '-'}}</span>
+          <!-- <select class="form-select jewelry-select" formControlName="jewelryType"
+            (ngModelChange)="getBundleCodesList(null)">
+            <option value="">Select Jewelry Type</option>
+            <option *ngFor="let jewelryType of jewelryTypeList" [ngValue]="jewelryType">
+              {{jewelryType}}</option>
+          </select> -->
+        </div>
+      </div> <br><br>
+
+      <hr>
+
+      <div class="row selected-unselected">
+        <div class="col-md-6 selected">
+          <div class="float-start">
+            <b>{{selectedCount}}</b> of 12 Codes Selected
+          </div>
+        </div>
+        <div class="col-md-6 unselected">
+          <div class="float-end link-color">
+            <div type="button" class="link-color" (click)="clearSelection()" [class.pointer-none]="selectedCount === 0">
+              <b>Unselect All Codes</b>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-2 p-4">
+      <div class="sizing" *ngFor="let category of filteredData">
+        <b>{{category.categoryName}}</b>
+        <div class="sub-heading" *ngFor="let jobCode of category.filteredJobCodes">
+          <mat-checkbox [checked]="jobCode.selected" (change)="onChangeSelection($event, jobCode)"
+            [disabled]="!jobCode.selected && selectedCount === 12" color="primary">
+            <span class="checkboxLabel">{{jobCode.code}} {{jobCode.description}}</span>
+          </mat-checkbox>
+        </div> <br>
+      </div>
+    </div>
+
+    <div class="container-3">
+      <div type="button" class="footer" (click)="updateCodes()" [class.pointer-none]="selectedCount === 0">
+        <span><b>{{buttonLabel}}</b></span>
+        <span *ngIf="selectedCount > 0 && buttonLabel === 'Add Codes'"><b> ({{selectedCount}})</b></span>
+      </div>
+    </div>
+  </form>
+</div>

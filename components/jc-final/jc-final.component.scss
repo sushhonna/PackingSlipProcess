@@ -1,0 +1,357 @@
+@import 'src/Styles/common';
+
+.jc-final-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+
+  .form-error {
+    border: 1px solid color('red-error');
+  }
+
+  .missing-shipto {
+    color: color('red-error');
+    margin-left: 20px;
+    font-size: 14px;
+  }
+
+  .mat-form-field-infix {
+    width: auto !important;
+   }
+
+  .jc-final-content-container {
+    padding: 15px 20px;
+    width: 74.5%;
+    background-color: color('light-grey');
+    height: 100%;
+
+    .jc-final-add-code {
+      float: right;
+      color: color('blue-primary');
+      margin-bottom: 5px;
+
+      .btn-icon-add {
+        margin-right: 5px;
+        border: none;
+        height: 30px;
+        width: 30px;
+        border-radius: 2px;
+        font-size: 20px;
+        padding: 0px;
+        background: none;
+        font-size: 15px;
+        color: color('blue-primary');
+        i {
+          font-style: normal;
+        }
+      }
+      .span-add-code {
+        color: color('blue-primary');
+      }
+    }
+
+    .jc-final-shipto-label {
+      color: color('grey');
+      font-size: 20px;
+      line-height: 27px;
+      margin-top: 35px;
+      margin-bottom: 15px;
+    }
+
+    .jc-final-store-entry {
+      margin-bottom: 30px;
+
+      .jc-final-store-entry__label {
+        height: 22px;
+        width: 111px;
+        color: color('dark-blue-2');
+        font-size: 16px;
+        line-height: 22px;
+        margin-left: 20px;
+      }
+
+      .jc-final-store-input-container {
+        border-left: 7px solid color('white');
+        padding-left: 13px;
+        max-height: 45px;
+
+        .jc-final-store-entry-input {
+          @extend %standard-input;
+          width: 120px;
+        }
+
+        .jc-final-store-entry-logo {
+          border-right: 3px solid color('light-grey-5');
+          padding: 0px 35px 0px 16px;
+          height: 45px;
+
+          img {
+            height: 31px;
+            width: 85px;
+            vertical-align: middle;
+          }
+        }
+
+        .jc-final-store-entry-contact {
+          display: inline-block;
+          padding-left: 35px;
+          vertical-align: middle;
+        }
+
+        .jc-final-store-entry-contact__label {
+          color: color('grey');
+          font-size: 16px;
+          line-height: 24px;
+        }
+
+        .jc-final-store-entry-contact__value {
+          color: color('grey');
+          font-size: 14px;
+          font-weight: 600;
+          line-height: 19px;
+        }
+      }
+    }
+  }
+
+  .jc-final-store-entry-no-work-done{
+    display: flex;
+    margin-top: 30px;
+
+    .no-work-done{
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+    }
+
+    .checkbox {
+      height: 20px;
+      width: 20px;
+      border: 1px solid color('blue-primary') !important;
+      border-radius: 4px;
+      background-color: color('white');
+      padding-right: 11px;
+      margin-bottom: 5px;
+      box-shadow: inset 0 1px 3px 0 color('blue-primary');
+    }
+    .work-text{
+      padding-left: 5px;
+    }
+    .add-multiple-code{
+      color: #4980b3;
+      .mat-icon {
+        background-repeat: no-repeat;
+        display: inline-block;
+        fill: currentColor;
+        border: 2px solid #4980b3;
+        font-weight: 600;
+        height: 20px;
+        width: 20px;
+        font-size: 16px;
+        margin-right: 10px;
+      }
+    }
+  }
+
+  table {
+
+    .mat-header-cell{
+      padding: 0 !important;
+      padding-left: 5px !important;
+    }
+    .sort-indicator{
+      right: -3px !important;
+    }
+    .mat-sort-header-button {
+      padding-right: 10px !important;
+    }
+    .mat-cell{
+      padding-left: 10px !important;
+    }
+
+    .hidden-row{
+      display: none;
+    }
+
+    th {
+      color: color('black87');
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 0.01px;
+      line-height: 16px;
+    }
+
+    input {
+      @extend %standard-input;
+      width: 60px;
+    }
+
+    .jc-cost-field {
+      padding-right: 5px;
+      width: 120px;
+    }
+
+    .dollar-sign {
+      position: absolute;
+      top: 7px;
+      left: 7px;
+      font-size: 20px;
+      letter-spacing: 0.01px;
+      line-height: 22px;
+
+      & + input {
+        padding-left: 20px !important;
+      }
+    }
+
+    .jc-employee-field {
+      padding-right: 10px;
+      width: 205px;
+    }
+
+    .form-error {
+      border: 1px solid color('red-error');
+    }
+
+    .btn-icon-add,
+    .btn-icon-close {
+      height: 30px;
+      width: 30px;
+      border: 2px solid color('blue-primary');
+      border-radius: 2px;
+      font-size: 20px;
+      color: color('blue-primary');
+      padding: 0px;
+      background: none;
+      font-weight: bold;
+      font-size: 15px;
+
+      i {
+        font-style: normal;
+      }
+    }
+
+    .btn-icon-add {
+      margin-right: 5px;
+      border: none;
+    }
+
+    .mat-form-field-remove-all-paddings .mat-form-field-subscript-wrapper {
+      padding: 0px !important;
+    }
+
+    td {
+      padding: 15px 8px;
+    }
+
+    .remove-btn-cell {
+      padding: 0px 5px !important;
+      text-align: center;
+      margin: 0 auto;
+    }
+
+    .add-job-row td {
+      background: color('white') !important;
+      color: color('blue-primary');
+    }
+
+    .total-charge-row td {
+      background-color: color('light-blue') !important;
+      color: color('black87');
+      font-size: 14px;
+      font-weight: bold;
+      letter-spacing: 0.01px;
+      line-height: 16px;
+      text-align: center;
+    }
+  }
+
+  .jc-final-prev-jobs-table-container {
+    margin: 20px 0px;
+  }
+
+  .jc-final-comment-container {
+    margin: 20px 0px;
+
+    .jc-final-comment-label {
+      display: block;
+      color: color('grey');
+      font-size: 16px;
+      line-height: 22px;
+    }
+
+    .jc-final-comment-field {
+      resize: none;
+      height: 100px;
+      width: 95%;
+      color: color('grey');
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 19px;
+      border-radius: 4px;
+      background-color: color('white');
+      box-shadow: inset 0 1px 3px 0 color('black5');
+      border: none;
+    }
+  }
+
+  .jc-final-job-details {
+    background-color: color('white');
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    width: 24.5%;
+    margin-top: 46px;
+    padding-bottom: 120px;
+    height: auto;
+  }
+
+  .confirmation-footer__button {
+    color: color('white') !important;
+  }
+
+  .error--message {
+    color: color('red-notify');
+    top: 90%;
+    right: 71%;
+    position: fixed;
+  }
+}
+.datalist {
+  opacity: 0;
+}
+
+@-moz-document url-prefix() {
+  .dropdown {
+    width: 320px !important;
+  }
+}
+
+.btn-center{
+  display: flex;
+  justify-content: center;
+}
+
+@media only screen and (min-width: 1240px) {
+
+  .jc-final-container table td  {
+    padding: 15px 0.2em;
+  }
+
+}
+
+@media only screen and (min-width: 1276px) {
+
+  .jc-final-container table td  {
+    padding: 15px 0.2em;
+  }
+
+}
+
+.custom-dialog-container {
+  width: 27%;
+  height: 100%;
+  margin-left: 73%;
+}
+
+

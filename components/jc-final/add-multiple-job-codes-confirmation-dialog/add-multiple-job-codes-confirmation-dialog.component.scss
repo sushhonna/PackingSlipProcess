@@ -1,0 +1,35 @@
+.container{
+    width: 500px;
+    height: 250px;
+    padding: 50px 40px;
+    p{
+        font-size: 20px;
+        text-align-last: center;
+    }
+
+    .sub-container{
+        margin: 0 20%;
+        display: flex;
+        padding: 0;
+        .noBtn{
+          background: white;
+          color: #6ea0c8;
+          border: #4980b3 1px solid !important;
+          border-radius: 5px;
+          font-size: 20px;
+          padding: 5px 20px;
+          margin: 12% 0 6% 16%;
+          width: 40%;
+        }
+        .yesBtn{
+          color: #e0e9f2;
+          background: #4980b3;
+          border-color: transparent;
+          border-radius: 5px;
+          font-size: 20px;
+          padding: 5px 20px;
+          margin: 12% 6% 6% 0;
+          width: 40%;
+        }
+    }
+}

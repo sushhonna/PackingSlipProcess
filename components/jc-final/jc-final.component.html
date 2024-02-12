@@ -1,0 +1,427 @@
+<div class="jc-final-container">
+  <div class="jc-final-content-container">
+    <div class="breadcrumb">
+        <app-bread-crumb
+          [titles]="getBreadCrumbTitles()"
+          [links]="getBreadCrumbLinks()"
+        ></app-bread-crumb>
+    </div>
+    <h1>Update Job Codes</h1>
+    <div class="jc-final-shipto-label">Ships To</div>
+    <div class="jc-final-store-entry">
+      <div class="jc-final-store-entry__label">
+        Store Number:
+      </div>
+      <div
+        class="jc-final-store-input-container"
+        [ngStyle]="{ 'border-left-color': shipToStore?.ticketColor }"
+      >
+        <input
+          type="text"
+          placeholder="Enter store"
+          [value]="shipToStore?.storeNo"
+          [formControl]="jobsForm.get('shipToStore')"
+          class="jc-final-store-entry-input"
+          (blur)="validateStoreDetails($event.target.value)"
+          (keyup.enter)="validateStoreDetails($event.target.value)"
+          (input)="validateInputStoreNumber($event.target.value)"
+          [ngClass]="{
+            'form-error': continueClicked && !hasShipTo
+          }"
+          [readOnly]="readOnlyShipToStore"
+        />
+        <span class="jc-final-store-entry-logo">
+          <img [src]="storeDetails?.logo" />
+        </span>
+        <div class="jc-final-store-entry-contact">
+          <div class="jc-final-store-entry-contact__label">Phone:</div>
+          <div class="jc-final-store-entry-contact__value">
+            {{ storeDetails?.phone | telephone }}
+          </div>
+        </div>
+      </div>
+      <div class="jc-final-store-entry-no-work-done">
+        <div *ngIf="bundleJobCodesIf && enableBundleLink">
+          <div class="add-multiple-code" *ngIf="!noWorkDoneDisableFieldRow">
+              <span (click)="addMultipleCodes(true)">
+                <mat-icon>add</mat-icon>
+                <span>Add Multiple Codes</span>
+              </span>
+          </div>
+        </div>
+        <div class="no-work-done" *ngIf="featureToggleIf">
+          <input
+            class="checkbox"
+            type="checkbox"
+            [(ngModel)]="noWorkDone"
+            (ngModelChange)="noWorkDoneChange($event)"
+          />
+          <span class="work-text">No work done</span>
+        </div>
+      </div>
+      <div class="missing-shipto" *ngIf="continueClicked && !hasShipTo">
+        Enter ship to store
+      </div>
+      <div class="missing-shipto" *ngIf="invalidShipTo">
+        {{ errorMessages.JOB_COMPLETION.INVALID_SHIP_TO_STORE }}
+      </div>
+    </div>
+    <div class="jc-final-table-container">
+      <table id="jobTable"
+        mat-table
+        [dataSource]="dataSource"
+        class="app-table"
+        matSort
+        (matSortChange)="sortTable($event)"
+      >
+        <ng-container matColumnDef="code" *ngIf="!noWorkDoneDisableFieldRow">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="code">
+            Code
+            <div class="sort-indicator" [ngClass]="{ desc: sortDirection }">
+              {{ sortIndicator('code') }}
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let element; let i = index">
+            <span *ngIf="!element.get('editable').value">{{
+              element.get('code').value
+            }}</span>
+            <mat-form-field
+              class="mat-form-field-remove-all-paddings"
+              *ngIf="element.get('editable').value"
+            >
+              <input
+                type="text"
+                name="code{{ i }}"
+                id="code{{ i }}"
+                aria-label="Number"
+                matInput
+                [matAutocomplete]="auto"
+                [formControl]="element.get('code')"
+                (ngModelChange)="codeFilterValues($event)"
+                #codeFieldSelectId
+                (click)="codeFieldSelectId.select()"
+                (focus)="setFirstItem(element, $event);"
+                (blur)="setFirstItem(element, $event); validateJobCode(element); blankRow(element); setQtyEmpValue(element); empName(element);"
+                (keyup.enter)="setFirstItem(element, $event); blankRow(element); setQtyEmpValue(element); empName(element);"
+                (keydown.Tab)="setFirstItem(element, $event); submitFocus(element); blankRow(element); setQtyEmpValue(element); empName(element);"
+                [ngClass]="{
+                  'form-error': ( !touchedError ? element.get('code').touched && element.get('code').invalid : '' )
+                    
+                }"
+              />
+              <mat-autocomplete #auto="matAutocomplete" class="dropdown" (optionSelected)="blankRow(element); setQtyEmpValue(element); empName(element);">
+                <mat-option *ngFor="let option of ((element.get('code') == null) ? jobCodesFiltered : typeAheadCodes)" [value]="option.code" >
+                  {{ option.code + ' - ' + option.description }}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-error
+                *ngIf="
+                  element.get('code').touched &&
+                  element.get('code').invalid && !touchedError
+                "
+              >
+               Please select code from the dropdown
+              </mat-error>
+            </mat-form-field>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="qty" *ngIf="!noWorkDoneDisableFieldRow">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="qty">
+            Qty
+            <div class="sort-indicator" [ngClass]="{ desc: sortDirection }">
+              {{ sortIndicator('qty') }}
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span *ngIf="!element.get('editable').value">{{
+              element.get('qty').value
+            }}</span>
+            <mat-form-field
+              class="mat-form-field-remove-all-paddings"
+              *ngIf="element.get('editable').value"
+            >
+              <input
+                matInput
+                [formControl]="element.get('qty')"
+                type="text"
+                (keypress)="numberOnly($event)"
+                [ngClass]="{
+                  'form-error': ( !touchedError ? element.get('qty').touched && element.get('qty').invalid : '' )
+                }"
+                (blur)="getTotalCost(element); validateQty(element);"
+                maxlength="2"
+                minlength="1"
+                #qtyId
+                (click)="qtyId.select()"
+              />
+              <mat-error
+                *ngIf="
+                  element.get('qty').touched &&
+                  element.get('qty').invalid && !touchedError
+                "
+              >
+                Qty must be greater than zero
+              </mat-error>
+            </mat-form-field>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="code" *ngIf="noWorkDoneDisableFieldRow">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="code">
+            Code
+            <div class="sort-indicator" [ngClass]="{ desc: sortDirection }">
+              {{ sortIndicator('code') }}
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.get('code').value }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="qty" *ngIf="noWorkDoneDisableFieldRow">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="qty">
+            Qty
+            <div class="sort-indicator" [ngClass]="{ desc: sortDirection }">
+              {{ sortIndicator('qty') }}
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.get('qty').value }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="description">
+            Description
+            <div class="sort-indicator" [ngClass]="{ desc: sortDirection }">
+              {{ sortIndicator('description') }}
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.get('description').value }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="cost">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="cost">
+            Cost
+            <div class="sort-indicator" [ngClass]="{ desc: sortDirection }">
+              {{ sortIndicator('cost') }}
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span
+              *ngIf="
+                !element.get('editable').value || element.get('readOnly').value
+              "
+              >{{
+                element.get('unitCost').value | currency | minusSignWithParens
+              }}</span
+            >
+            <mat-form-field
+              class="mat-form-field-remove-all-paddings"
+              *ngIf="
+                element.get('editable').value && !element.get('readOnly').value
+              "
+            >
+              <span class="dollar-sign">$</span>
+              <input
+                class="jc-cost-field"
+                matInput
+                [formControl]="element.get('unitCost')"
+                type="text"
+                (keypress)="amountOnly($event)"
+                [ngClass]="{
+                  'form-error': ( !touchedError ? element.get('unitCost').touched && element.get('unitCost').invalid : '' )
+                }"
+                (blur)="getTotalCost(); appendCents(element); validateUnitCost(element)"
+                maxlength="10"
+                #costId
+                (click)="costId.select()"
+              />
+              <mat-error
+              *ngIf="
+                element.get('unitCost').touched &&
+                element.get('unitCost').invalid && !touchedError
+              "
+            >
+                Cost must be greater than zero.
+            </mat-error>
+            </mat-form-field>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="charge">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="charge">
+            Charge
+            <div class="sort-indicator" [ngClass]="{ desc: sortDirection }">
+              {{ sortIndicator('charge') }}
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{
+              element.get('qty').value * element.get('unitCost').value
+                | currency
+                | minusSignWithParens
+            }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="credit">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="credit">
+            Credit
+            <div class="sort-indicator" [ngClass]="{ desc: sortDirection }">
+              {{ sortIndicator('credit') }}
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let element; let i = index">
+            <mat-checkbox
+              *ngIf="element.get('credit')"
+              [formControl]="element.get('credit')"
+              (change)="updateCost(i)"
+            >
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="employee">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="employee">
+            Employee
+            <div class="sort-indicator" [ngClass]="{ desc: sortDirection }">
+              {{ sortIndicator('employee') }}
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let element; let i = index">
+            <mat-form-field class="mat-form-field-remove-all-paddings">
+              <input
+                (keydown.Tab)="onTab(element)"
+                type="text"
+                name="employee{{ i }}"
+                id="employee{{ i }}"
+                aria-label="Number"
+                matInput
+                [matAutocomplete]="autoEmp"
+                [formControl]="element.get('employeeNumber')"
+                (ngModelChange)="empFilterValues($event)"
+                class="jc-employee-field"
+                #empFieldSelectId
+                (click)="empFieldSelectId.select()"
+                (blur)="validateEmployee(element);"
+                (focus)="validateEmployee(element);empName(element); empFieldSelectId.select();" 
+                (keyup.enter)="validateEmployee(element);empName(element);"
+                [ngClass]="{
+                  'form-error': ( !touchedError ? element.get('employeeNumber').touched && element.get('employeeNumber').invalid : '' )
+                }"
+              />
+              <mat-error
+                *ngIf="
+                  element.get('employeeNumber').touched &&
+                  element.get('employeeNumber').invalid && !touchedError
+                "
+              >
+                Please select Employee
+              </mat-error>
+              <mat-error *ngIf="invalidEmpNo">
+                Invalid Employee number
+              </mat-error>
+              <mat-autocomplete #autoEmp="matAutocomplete" (optionSelected)="validateEmployee(element);empName(element);">
+                <mat-option *ngFor="let option of ((element.get('employeeNumber') == null) ? employees : typeAheadEmp)" [value]="option.employeeId + ' - ' + option.firstName + ' ' + option.lastName" >
+                  {{ option.employeeId }} - {{ option.firstName }} {{ option.lastName }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header="storeNumber"
+          class="btn-center"
+        >
+          <button
+          type="button"
+          *ngIf="showHideAddCodeBtn && noWorkDonedeletebtn"
+          class="btn btn-icon-close"
+          (click)="removeAllJobs()"
+          tabindex="-1">
+            <i class="icon done">
+              G
+            </i>
+          </button>
+        </th>
+          <td
+            mat-cell
+            *matCellDef="let element; let i = index"
+            class="remove-btn-cell"
+          >
+            <button
+              *ngIf="(element.get('code').value || element.get('description').value) && noWorkDonedeletebtn"
+              type="button"
+              class="btn btn-icon-close"
+              (click)="removeJob(i)"
+              tabindex="-1"
+            >
+              <i class="icon done">
+                G
+              </i>
+            </button>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="totalCharge">
+          <td mat-footer-cell *matFooterCellDef colspan="7">
+            Total Charge: {{ totalCost | currency | minusSignWithParens }}
+          </td>
+        </ng-container>
+        <tr
+          mat-header-row
+          *matHeaderRowDef="displayedColumns; sticky: true"
+        ></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+       
+        <tr
+          mat-footer-row
+          *matFooterRowDef="['totalCharge']"
+          class="total-charge-row"
+        ></tr>
+      </table>
+    </div>
+    <div class="jc-final-comment-container">
+      <label class="jc-final-comment-label">Repair Comment</label>
+      <textarea
+        class="jc-final-comment-field"
+        #shopRepairComment
+        [formControl]="jobsForm.get('shopComment')"
+        #emptyCodeId
+      ></textarea>
+      <mat-error
+        *ngIf="
+          jobsForm.get('shopComment').touched &&
+          jobsForm.get('shopComment').invalid
+        "
+        >Store comment is required</mat-error
+      >
+    </div>
+    <div class="jc-final-comment-container">
+      <label class="jc-final-comment-label">Store Comment</label>
+      {{ jobData?.jobComment | empty }}
+    </div>
+  </div>
+  <app-jc-job-details
+    class="jc-final-job-details"
+    [hideStoreDetails]="true"
+  ></app-jc-job-details>
+  <div class="confirmation-footer">
+    <span class="error--message" *ngIf="emptyFieldsError">
+      {{ emptyFieldsErrorMsg }}</span
+    >
+    <button
+      mat-button
+      class="confirmation-footer__button"
+      [disabled]="disableSubmit"
+      (click)="submitJobs()"
+      #emptyCodeId
+    >
+      Finish
+    </button>
+    <label class="confirmation-footer__cancel__button" (click)="goBack()">
+      Cancel
+    </label>
+  </div>
+</div>

@@ -1,0 +1,74 @@
+<div class="app">
+  <div class="content-wrapper">
+    <div class="breadcrumb">
+        <app-bread-crumb
+          [titles]="getBreadCrumbTitles()"
+          [links]="getBreadCrumbLinks()"
+        ></app-bread-crumb>
+    </div>
+    <h1 class="heading">Take Photo(s)</h1>
+    <div class="main-content">
+      <span class="sub-heading">Completion</span>
+      <div class="photo-condition">
+        {{ displayMessages.JOBCOMPLETION.PHOTOS_CONDITION(jobDetails.chainTagNos.length) }}
+      </div>
+      <div [ngClass]="{ hide: !takePhotos }">
+        <div class="photo-border">
+          <div>
+            <video #video class="video" autoplay></video>
+          </div>
+        </div>
+      </div>
+      <div [ngClass]="{ hide: takePhotos }">
+        <div
+          class="photo-wrapper"
+          *ngFor="let photo of jobPhotos; let i = index"
+        >
+          <div class="photo-border taken-photo-border">
+            <div *ngIf="photo">
+              <img class="job-photo" [src]="domSanitizer.bypassSecurityTrustUrl(photo)" />
+            </div>
+          </div>
+          <div class="take-photo__right">
+            <button (click)="clearImage(i)" class="retake">
+              Retake Photo
+            </button>
+          </div>
+        </div>
+      </div>
+      <app-jc-job-details
+        class="job-details"
+        showImgsOnly="true"
+      ></app-jc-job-details>
+    </div>
+  </div>
+</div>
+<div [ngClass]="{ hide: !takePhotos }">
+  <canvas #canvas class="canvas" width="640" height="480"></canvas>
+</div>
+<div class="confirmation-footer">
+  <button
+    class="confirmation-footer__button"
+    (click)="capture()"
+    [ngClass]="{ hide: !takePhotos }"
+  >
+    Take Photo
+  </button>
+  <button
+    class="confirmation-footer__button"
+    (click)="takeAnother()"
+    [ngClass]="{ hide: takePhotos }"
+    *ngIf="!proceedToNextFlag"
+  >
+    Take Another Photo
+  </button>
+  <button
+    class="confirmation-footer__button"
+    (click)="proceedToJobCodes()"
+    [ngClass]="{ hide: takePhotos }"
+    *ngIf="proceedToNextFlag"
+  >
+    Next
+  </button>
+  <label class="confirmation-footer__cancel__button" (click)="navigateToScan()">Cancel</label>
+</div>

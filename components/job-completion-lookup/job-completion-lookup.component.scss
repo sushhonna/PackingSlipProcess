@@ -1,0 +1,26 @@
+@import '../../../../../Styles/common.scss';
+
+.lookup {
+  margin-top: 47px;
+  margin-left: 47px;
+  float: left;
+}
+
+.lookup__title {
+  margin-top: 20px;
+  margin-bottom: 12px;
+}
+
+.lookup__input {
+  @extend %standard-input;
+  width: 250px;
+}
+.lookup__input--error {
+  border: 1px solid color('red-notify');
+}
+
+.lookup__error {
+  @extend %standard-error;
+  width: 250px;
+  display: block;
+}

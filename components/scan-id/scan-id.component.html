@@ -1,0 +1,94 @@
+<div class="jc-scan-id-container">
+  <div class="jc-scan-id-content-container">
+    <div class="jc-scan-id-details-container">
+      <div class="breadcrumb">
+          <app-bread-crumb
+            [titles]="getBreadCrumbTitles()"
+            [links]="getBreadCrumbLinks()"
+          ></app-bread-crumb>
+      </div>
+      <h1 class="jc-scan-id-details-container__header">
+        Scan Identification Tags
+      </h1>
+      <div class="jc-scan-id-details-input-container">
+        <div class="jc-scan-id-details-input-container__title">
+          {{ enterMsg }}
+        </div>
+        <input
+          class="jc-scan-id-details-input-container__field"
+          matInput
+          placeholder="Enter or Scan ID #"
+          #searchInput
+          (keyup)="onSearch($event)"
+        />
+      </div>
+      <div class="error--message" *ngIf="chainTagsNotScanned">
+        {{ chainTagsError }}
+      </div>
+      <div class="jc-scan-id-details-table-container">
+        <table
+          mat-table
+          [dataSource]="jobScanDetailsData"
+          matSort
+          class="app-table"
+          (matSortChange)="sortTable($event)"
+        >
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              class="jc-scan-id-details-table-container__button-cell"
+            >
+              <button
+                *ngIf="element.selected"
+                class="jc-scan-id-details-table-container__select-button"
+                (click)="deselectJob(element, $event)"
+              >
+                Deselect
+              </button>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="scanID">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="scanID">
+              Identification Tag Numbers
+              <div class="sort-indicator" [ngClass]="{ desc: sortDirection }">
+                {{ sortIndicator('scanID') }}
+              </div>
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.chainTagNo }}
+            </td>
+          </ng-container>
+          <tr
+            mat-header-row
+            *matHeaderRowDef="displayedColumns; sticky: true"
+          ></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            [class.selected]="row.selected"
+          ></tr>
+        </table>
+      </div>
+    </div>
+    <div class="jc-scan-id-job-details-container">
+      <app-jc-job-details></app-jc-job-details>
+    </div>
+    <div class="confirmation-footer">
+      <button
+        mat-button
+        class="confirmation-footer__button"
+        (click)="gotoPhotography()"
+      >
+        Confirm
+      </button>
+      <label
+        class="confirmation-footer__cancel__button"
+        routerLink="/job-completion/lookup"
+      >
+        Cancel
+      </label>
+    </div>
+  </div>
+</div>
